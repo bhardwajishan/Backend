@@ -1,6 +1,6 @@
 // Utilities are used to create functions that are called repeatedly
 
-// This function is used for async and promises
+// This function simplifies the process of handling errors in asynchronous Express route handlers.
 
 const asyncHandler = (requestHandler)=>{
     return (req,res,next)=>{

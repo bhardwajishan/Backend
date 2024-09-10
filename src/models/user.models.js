@@ -1,3 +1,5 @@
+// This code defines a User schema for a MongoDB collection using Mongoose. It includes user authentication functionalities like password hashing, access token generation, and refresh token generation using JWT (JSON Web Token) and bcrypt for password encryption.
+
 import mongoose from "mongoose";
 import jwt from 'jsonwebtoken'; // Bearer token i.e., the one who send token we consider him the owner
 import bcrypt from 'bcrypt';
@@ -52,7 +54,7 @@ const userSchema = new mongoose.Schema(
     }
 )
 
-// Logic to encrypt password
+// Logic to encrypt password before saving
 userSchema.pre("save",async function (next) {
     if(!this.isModified("password")) return next();//Password is only encrypted when it is modified
 
@@ -60,10 +62,12 @@ userSchema.pre("save",async function (next) {
     next()
 })
 
+// Compares the provided password with the hashed password stored in the database using bcrypt.compare. Returns true if the passwords match.
 userSchema.methods.isPasswordCorrect =  async function (password) {
     return await bcrypt.compare(password, this.password)
 }
 
+// Generates a JWT access token containing essential user information (_id, email, username, and fullname).
 userSchema.methods.generateAccessToken = function () {
     return jwt.sign(
         {
@@ -78,6 +82,8 @@ userSchema.methods.generateAccessToken = function () {
         }
     )
 }
+
+// Generates a refresh token that only contains the user's _id. This token can be used to get a new access token when the current one expires.
 userSchema.methods.generateRefreshToken = function () {
     return jwt.sign(
         {

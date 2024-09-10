@@ -3,7 +3,7 @@ import connectDB from './db/index.js'
 import { app } from './app.js';
 
 // It is used to configure the environment variables
-dotenv.config({path:"./env"})
+dotenv.config({path:"./.env"})
 
 // It is uesd to connect database at some port 
 connectDB().then(()=>{
